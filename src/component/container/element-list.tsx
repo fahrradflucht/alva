@@ -99,7 +99,12 @@ export class ElementList extends React.Component {
 				}
 
 				store.execute(
-					ElementLocationCommand.addChild(newParent, draggedElement, undefined, newIndex)
+					ElementLocationCommand.addChild(
+						newParent,
+						draggedElement,
+						element.getParentSlotId(),
+						newIndex
+					)
 				);
 				store.setSelectedElement(draggedElement);
 			},
@@ -159,7 +164,38 @@ export class ElementList extends React.Component {
 			value: `🔘 ${slot.getName()}`,
 			draggable: false,
 			children: childItems,
-			label: slotId
+			label: slotId,
+			handleDragDropForChild: (e: React.DragEvent<HTMLElement>) => {
+				alert('handleDragDropForChild');
+			},
+			handleDragDrop: (e: React.DragEvent<HTMLElement>) => {
+				const patternId = e.dataTransfer.getData('patternId');
+
+				let draggedElement: PageElement | undefined;
+
+				const store = Store.getInstance();
+				if (!patternId) {
+					draggedElement = store.getDraggedElement();
+				} else {
+					const styleguide = store.getStyleguide();
+
+					if (!styleguide) {
+						return;
+					}
+
+					draggedElement = new PageElement({
+						pattern: styleguide.getPattern(patternId),
+						setDefaults: true
+					});
+				}
+
+				if (!draggedElement) {
+					return;
+				}
+
+				store.execute(ElementLocationCommand.addChild(element, draggedElement, slotId));
+				store.setSelectedElement(draggedElement);
+			}
 		};
 
 		return slotListItem;

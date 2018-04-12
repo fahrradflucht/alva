@@ -215,6 +215,10 @@ export class PageElement {
 		}
 	}
 
+	public getAllChildren(): Map<string, PageElement[]> {
+		return this.contents;
+	}
+
 	/**
 	 * Returns the child page elements of this element for a given slot.
 	 * @param slotId The id of the slot to get the children for. Returns the children of the default slot if undefined.
@@ -424,7 +428,9 @@ export class PageElement {
 		}
 
 		if (this.parent) {
-			(this.parent.getChildren(slotId) as MobX.IObservableArray<PageElement>).remove(this);
+			(this.parent.getChildren(this.parentSlotId) as MobX.IObservableArray<PageElement>).remove(
+				this
+			);
 		}
 
 		if (this.page) {

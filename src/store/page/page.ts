@@ -142,6 +142,8 @@ export class Page {
 	 */
 	public unregisterElementAndChildren(element: PageElement): void {
 		this.elementsById.delete(element.getId());
-		element.getChildren().forEach(child => this.unregisterElementAndChildren(child));
+		element.getAllChildren().forEach(slotContents => {
+			slotContents.forEach(child => this.unregisterElementAndChildren(child));
+		});
 	}
 }
