@@ -109,7 +109,9 @@ export class Page {
 	 */
 	public registerElementAndChildren(element: PageElement): void {
 		this.elementsById.set(element.getId(), element);
-		element.getChildren().forEach(child => this.registerElementAndChildren(child));
+		element.getAllChildren().forEach((children, slotId) => {
+			children.forEach(child => this.registerElementAndChildren(child));
+		});
 	}
 
 	/**

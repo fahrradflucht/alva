@@ -423,7 +423,12 @@ export class PageElement {
 		index?: number,
 		page?: Page
 	): void {
-		if (index !== undefined && this.parent === parent && this.getIndex() === index) {
+		if (
+			index !== undefined &&
+			this.parent === parent &&
+			this.getIndex() === index &&
+			this.parentSlotId === slotId
+		) {
 			return;
 		}
 
@@ -438,6 +443,7 @@ export class PageElement {
 		}
 
 		this.parent = parent;
+		this.parentSlotId = slotId;
 		this.updatePageInDescendants(page);
 
 		if (parent) {
